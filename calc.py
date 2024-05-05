@@ -108,3 +108,52 @@ def count_3d(x0, y0, z0, vx0, vy0, vz0, M, n, dt, k1, k):
             y[i] = y[stop_count]
             z[i] = z[stop_count]
     return x, y, z, vx, vy, vz
+
+# 2D graph
+def draw_2d(to_draw):
+    data_arrays = np.array(to_draw)
+    x_lim1 = []
+    x_lim2 = []
+    y_lim1 = []
+    y_lim2 = []
+
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    # print(data_arrays)
+    for j in data_arrays:
+        x1 = np.zeros(int(N / 1000))
+        y1 = np.zeros(int(N / 1000))
+
+        for i in range(0, int(N / 1000)):
+            x1[i] = j[0][i * 1000]
+
+        for i in range(0, int(N / 1000)):
+            y1[i] = j[1][i * 1000]
+
+        xmax = max(x1)
+        ymax = max(y1)
+        maxm = max([xmax, ymax])
+
+        xmin = min(x1)
+        ymin = min(y1)
+        minm = min([xmin, ymin])
+
+        deltax = (maxm - xmax + minm - xmin) / 2
+        deltay = (maxm - ymax + minm - ymin) / 2
+
+        x_lim1.append(minm - deltax)
+        x_lim2.append(maxm - deltax)
+
+        y_lim1.append(minm - deltay)
+        y_lim2.append(maxm - deltay)
+
+        ax.plot(x1, y1)
+
+    ax.set_xlim(min(x_lim1), max(x_lim2))
+    ax.set_ylim(min(y_lim1), max(y_lim2))
+
+    ax.scatter(0, 0, color='red')
+    ax.grid(True)
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    plt.show()
