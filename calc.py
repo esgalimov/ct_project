@@ -59,3 +59,52 @@ def count_2d(x0, y0, v0, alpha, M, n, dt, k1, k):
             x[i] = x[stop_count]
             y[i] = y[stop_count]
     return x, y, vx, vy
+
+
+# 3D
+@njit(fastmath=True)
+def count_3d(x0, y0, z0, vx0, vy0, vz0, M, n, dt, k1, k):
+    stop_count = 0
+    x = np.zeros(n)
+    x[0] = x0
+    y = np.zeros(n)
+    y[0] = y0
+    z = np.zeros(n)
+    z[0] = z0
+    vx = np.zeros(n)
+    vx[0] = vx0
+    vy = np.zeros(n)
+    vy[0] = vy0
+    vz = np.zeros(n)
+    vz[0] = vz0
+
+    for i in range(1, n):
+        if (x[i - 1] == 0 and y[i - 1] == 0 and z[i - 1] == 0) or (x[i - 1] > INF or y[i - 1] > INF or z[i - 1] > INF):
+            stop_count = i - 1
+            break
+        ax = ((-G * M * x[i - 1]) / ((x[i - 1] ** 2 + y[i - 1] ** 2 + z[i - 1] ** 2) ** 1.5)) + (k - k1) * vx[i - 1]
+        vx2 = vx[i - 1] + dt * ax
+        ax1 = ((-G * M * (x[i - 1] + vx[i - 1] * dt)) / (((x[i - 1] + vx[i - 1] * dt) ** 2 + (
+                    y[i - 1] + vy[i - 1] * dt) ** 2 + (z[i - 1] + vz[i - 1] * dt) ** 2) ** 1.5)) + (k - k1) * vx2
+        vx[i] = vx[i - 1] + (dt / 2) * (ax + ax1)
+        x[i] = x[i - 1] + (dt / 2) * (vx[i - 1] + vx[i])
+
+        ay = ((-G * M * y[i - 1]) / ((x[i - 1] ** 2 + y[i - 1] ** 2 + z[i - 1] ** 2) ** 1.5)) + (k - k1) * vy[i - 1]
+        vy2 = vy[i - 1] + dt * ay
+        ay1 = ((-G * M * (y[i - 1] + vy[i - 1] * dt)) / (((x[i - 1] + vx[i - 1] * dt) ** 2 + (
+                    y[i - 1] + vy[i - 1] * dt) ** 2 + (z[i - 1] + vz[i - 1] * dt) ** 2) ** 1.5)) + (k - k1) * vy2
+        vy[i] = vy[i - 1] + (dt / 2) * (ay + ay1)
+        y[i] = y[i - 1] + (dt / 2) * (vy[i - 1] + vy[i])
+
+        az = ((-G * M * z[i - 1]) / ((x[i - 1] ** 2 + y[i - 1] ** 2 + z[i - 1] ** 2) ** 1.5)) + (k - k1) * vz[i - 1]
+        vz2 = vz[i - 1] + dt * az
+        az1 = ((-G * M * (z[i - 1] + vy[i - 1] * dt)) / (((x[i - 1] + vx[i - 1] * dt) ** 2 + (
+                    y[i - 1] + vy[i - 1] * dt) ** 2 + (z[i - 1] + vz[i - 1] * dt) ** 2) ** 1.5)) + (k - k1) * vz2
+        vz[i] = vz[i - 1] + (dt / 2) * (az + az1)
+        z[i] = z[i - 1] + (dt / 2) * (vz[i - 1] + vz[i])
+    if stop_count:
+        for i in range(stop_count, len(x) - 1):
+            x[i] = x[stop_count]
+            y[i] = y[stop_count]
+            z[i] = z[stop_count]
+    return x, y, z, vx, vy, vz
