@@ -157,3 +157,65 @@ def draw_2d(to_draw):
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     plt.show()
+
+
+# 3D graph
+def draw_3d(to_draw):
+    data_arrays = np.array(to_draw)
+    x_lim1 = []
+    x_lim2 = []
+    y_lim1 = []
+    y_lim2 = []
+    z_lim1 = []
+    z_lim2 = []
+
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+
+    for j in data_arrays:
+        x1 = np.zeros(int(N / 1000))
+        y1 = np.zeros(int(N / 1000))
+        z1 = np.zeros(int(N / 1000))
+
+        for i in range(0, int(N / 1000)):
+            x1[i] = j[0][i * 1000]
+
+        for i in range(0, int(N / 1000)):
+            y1[i] = j[1][i * 1000]
+
+        for i in range(0, int(N / 1000)):
+            z1[i] = j[2][i * 1000]
+
+        xmax = max(x1)
+        ymax = max(y1)
+        zmax = max(z1)
+
+        xmin = min(x1)
+        ymin = min(y1)
+        zmin = min(z1)
+
+        minm = min([xmin, ymin, zmin])
+        maxm = max([xmax, ymax, zmax])
+
+        deltax = (maxm - xmax + minm - xmin) / 2
+        deltay = (maxm - ymax + minm - ymin) / 2
+        deltaz = (maxm - zmax + minm - zmin) / 2
+
+        x_lim1.append(minm - deltax)
+        x_lim2.append(maxm - deltax)
+
+        y_lim1.append(minm - deltay)
+        y_lim2.append(maxm - deltay)
+
+        z_lim1.append(minm - deltaz)
+        z_lim2.append(maxm - deltaz)
+        ax.plot(x1, y1, z1)
+
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    ax.scatter(0, 0, 0, color='red')
+    ax.set_xlim(min(x_lim1), max(x_lim2))
+    ax.set_ylim(min(y_lim1), max(y_lim2))
+    ax.set_zlim(min(z_lim1), max(z_lim2))
+    plt.show()
