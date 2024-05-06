@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QWidget
 
 
 class Ui_About(object):
@@ -57,3 +58,10 @@ class Ui_About(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">4. <span style=\" font-style:italic;\">Добавленные значения</span>: список значений, добавленных в память.</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Если ввести некорректные значения, попытаться построить боьше 3 графиков, суммарное кол-во точек больше 20 000 000, то будет ошибка (будет показано соответствующее окно)</p></body></html>"))
+
+
+# window to show info about programm
+class AboutWindow(QWidget, Ui_About):
+    def __init__(self):
+        super(AboutWindow, self).__init__()
+        self.setupUi(self)

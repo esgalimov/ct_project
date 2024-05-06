@@ -1,4 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QWidget
+
+from constants import *
 
 
 class Ui_Settings(object):
@@ -62,3 +65,24 @@ class Ui_Settings(object):
         self.label_2.setText(_translate("Form", "dt"))
         self.pushButton.setText(_translate("Form", "Применить"))
         self.pushButton_2.setText(_translate("Form", "Отменить"))
+
+
+# window to change N and DT
+class SettingsWindow(QWidget, Ui_Settings):
+    def __init__(self):
+        global N, DT
+        super().__init__()
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.new_settings)
+        self.pushButton_2.clicked.connect(self.close)
+        self.error = ErrorWidget()
+        self.line_n.setText(str(N))
+        self.line_dt.setText(str(DT))
+
+    def new_settings(self):
+        global N, DT
+        try:
+            N = int(self.line_n.text())
+            DT = int(self.line_dt.text())
+        except ValueError:
+            self.error.show()

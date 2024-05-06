@@ -1,6 +1,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtWidgets import QWidget
 
 class Ui_Added(object):
     def setupUi(self, Form):
@@ -22,3 +22,9 @@ class Ui_Added(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Введенные значения"))
+
+# window to show which parameters added to graph creation
+class AddedWindow(QWidget, Ui_Added):
+    def __init__(self):
+        super(AddedWindow, self).__init__()
+        self.setupUi(self)

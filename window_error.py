@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QDialog
 
 
 class Ui_Error(object):
@@ -26,3 +27,10 @@ class Ui_Error(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Ошибка"))
         self.label.setText(_translate("Dialog", "Ошибка: неверный формат ввода"))
+
+
+# window to show error
+class ErrorWidget(QDialog, Ui_Error):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
