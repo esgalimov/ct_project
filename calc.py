@@ -102,7 +102,7 @@ def count_3d(x0, y0, z0, vx0, vy0, vz0, M, n, dt, k1, k):
     return x, y, z
 
 # 2D graph
-def draw_2d(to_draw):
+def draw_2d(to_draw, N):
     data_arrays = np.array(to_draw)
     # limits to make better position in the end
     x_lim1 = []
@@ -158,7 +158,7 @@ def draw_2d(to_draw):
 
 
 # 3D graph - (analog to 2D)
-def draw_3d(to_draw):
+def draw_3d(to_draw, N):
     data_arrays = np.array(to_draw)
     x_lim1 = []
     x_lim2 = []

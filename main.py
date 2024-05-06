@@ -93,12 +93,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # if more than POINTS_LIMIT points - error
     # catch some exceptions and show error_widgets
     def add(self):
-        global N, DT
         gc.collect()
         if not plt.get_fignums():
             try:
                 if sum([len(i[0]) + len(i[1]) for i in self.to_draw_2d]) +\
-                            sum([len(i[0]) + len(i[1] + len(i[2])) for i in self.to_draw_3d]) + N > POINTS_LIMIT:
+                            sum([len(i[0]) + len(i[1] + len(i[2])) for i in self.to_draw_3d]) + self.settings_window.get_N() > POINTS_LIMIT:
                     self.error_widget.label.setText('Ошибка: суммарно больше 20 000 000 точек')
                     self.error_widget.show()
                 
@@ -137,7 +136,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                         f' k1: {self.koeff1.text()}, k: {self.koeff.text()}')
 
         # calc trajectories (x and y - np arrays) and save them
-        x, y = count_2d(x0, y0, v0, alpha, M, N, DT, k1, k)
+        x, y = count_2d(x0, y0, v0, alpha, M, self.settings_window.get_N(), self.settings_window.get_DT(), k1, k)
         self.to_draw_2d.append([x, y])
     
     # 3D analog to 2D :)
@@ -159,7 +158,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                         f' M: {self.star_mass.text()}, k1: {self.koeff1_3d.text()},'
                                         f' k: {self.koeff_3d.text()}')
 
-        x, y, z = count_3d(x0, y0, z0, vx0, vy0, vz0, M, N, DT, k1, k)
+        x, y, z = count_3d(x0, y0, z0, vx0, vy0, vz0, M, self.settings_window.get_N(), self.settings_window.get_DT(), k1, k)
         self.to_draw_3d.append([x, y, z])
 
     # draw saved or if not saved draw with params in fields
@@ -169,7 +168,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if self.to_draw_2d == []:
                     self.add()
                 if 0 < len(self.to_draw_2d) <= 3:
-                    draw_2d(self.to_draw_2d)
+                    draw_2d(self.to_draw_2d, self.settings_window.get_N())
                 elif len(self.to_draw_2d) > 3:
                     self.error_widget.label.setText('Ошибка: больше 3 графиков')
                     self.error_widget.show()
@@ -177,7 +176,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if self.to_draw_3d == []:
                     self.add()
                 if 0 < len(self.to_draw_3d) <= 3:
-                    draw_3d(self.to_draw_3d)
+                    draw_3d(self.to_draw_3d, self.settings_window.get_N())
                 elif len(self.to_draw_2d) > 3:
                     self.error_widget.label.setText('Ошибка: больше 3 графиков')
                     self.error_widget.show()

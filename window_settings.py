@@ -2,8 +2,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 
 from window_error import ErrorWidget
-from constants import *
 
+# time delay between points
+DT = 30
+# points number
+N = 2000000
 
 class Ui_Settings(object):
     def setupUi(self, Form):
@@ -87,3 +90,9 @@ class SettingsWindow(QWidget, Ui_Settings):
             DT = int(self.line_dt.text())
         except ValueError:
             self.error.show()
+    
+    def get_N(self):
+        return N
+
+    def get_DT(self):
+        return DT
