@@ -16,3 +16,5 @@ DT = 30
 N = 2000000
 # infinity number
 INF = 10 ** 16
+# Max number of points
+POINTS_LIMIT = 20_000_000

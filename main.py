@@ -66,7 +66,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             try:
                 if self.tabWidget.currentIndex() == 0:
                     if sum([len(i[0]) + len(i[1]) for i in self.to_draw_2d]) +\
-                            sum([len(i[0]) + len(i[1] + len(i[2])) for i in self.to_draw_3d]) + N > 20_000_000:
+                            sum([len(i[0]) + len(i[1] + len(i[2])) for i in self.to_draw_3d]) + N > POINTS_LIMIT:
                         self.error_widget.label.setText('Ошибка: суммарно больше 20 000 000 точек')
                         self.error_widget.show()
                     else:
@@ -101,7 +101,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         k = float(self.koeff_3d.text())
                         k1 = float(self.koeff1_3d.text())
                         M = float(self.star_mass.text()) * SOLAR_MASS
-                        print(x0, y0, z0, vx0, vy0, vz0, k, k1, M)
+                        # print(x0, y0, z0, vx0, vy0, vz0, k, k1, M)
 
                         x, y, z, vx, vy, vz = count_3d(x0, y0, z0, vx0, vy0, vz0, M, N, DT, k1, k)
                         self.added_list['3d'].append(f'x0: {self.x_3d.text()} y0: {self.y_3d.text()},'

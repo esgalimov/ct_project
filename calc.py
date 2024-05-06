@@ -155,7 +155,7 @@ def draw_3d(to_draw):
     z_lim2 = []
 
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
 
     for j in data_arrays:
         x1 = np.zeros(int(N / 1000))
