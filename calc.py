@@ -1,18 +1,20 @@
-import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from numba import njit
-import sqlite3
-import gc
 
 from constants import *
 
 
 # calulations 2D
-@njit(fastmath=True)
+@njit(fastmath=True) # <---- jit-compile calculations to have better perfomance :) 
 def count_2d(x0, y0, v0, alpha, M, n, dt, k1, k):
+    # index to stop calc
     stop_count = 0
+
+    # degrees in radians
     alpha0 = (alpha / 180) * np.pi
+
+    # init arrays and start values
     x = np.zeros(n)
     x[0] = x0
     y = np.zeros(n)
@@ -21,11 +23,14 @@ def count_2d(x0, y0, v0, alpha, M, n, dt, k1, k):
     vx[0] = v0 * np.cos(alpha0)
     vy = np.zeros(n)
     vy[0] = v0 * np.sin(alpha0)
+
     for i in range(1, n):
+        # if object flew far away or fell to star - stop
         if (x[i - 1] == 0 and y[i - 1] == 0) or (x[i - 1] > INF or y[i - 1] > INF):
             stop_count = i - 1
             break
 
+        # Euler-Cauchy numeric method
         ax = ((-G * M * x[i - 1]) / ((x[i - 1] ** 2 + y[i - 1] ** 2) ** 1.5)) + (k - k1) * vx[i - 1]
         vx2 = vx[i - 1] + dt * ax
         ax1 = ((-G * M * (x[i - 1] + vx[i - 1] * dt)) / (
@@ -39,14 +44,16 @@ def count_2d(x0, y0, v0, alpha, M, n, dt, k1, k):
                     ((x[i - 1] + vx[i - 1] * dt) ** 2 + (y[i - 1] + vy[i - 1] * dt) ** 2) ** 1.5)) + (k - k1) * vy2
         vy[i] = vy[i - 1] + (dt / 2) * (ay + ay1)
         y[i] = y[i - 1] + (dt / 2) * (vy[i - 1] + vy[i])
+    
+    # if object flew far away or fell to star - fill last array with last good values to have good graph
     if stop_count:
         for i in range(stop_count, len(x) - 1):
             x[i] = x[stop_count]
             y[i] = y[stop_count]
-    return x, y, vx, vy
+    return x, y
 
 
-# 3D
+# 3D (same to 2D)
 @njit(fastmath=True)
 def count_3d(x0, y0, z0, vx0, vy0, vz0, M, n, dt, k1, k):
     stop_count = 0
@@ -92,11 +99,12 @@ def count_3d(x0, y0, z0, vx0, vy0, vz0, M, n, dt, k1, k):
             x[i] = x[stop_count]
             y[i] = y[stop_count]
             z[i] = z[stop_count]
-    return x, y, z, vx, vy, vz
+    return x, y, z
 
 # 2D graph
 def draw_2d(to_draw):
     data_arrays = np.array(to_draw)
+    # limits to make better position in the end
     x_lim1 = []
     x_lim2 = []
     y_lim1 = []
@@ -106,6 +114,7 @@ def draw_2d(to_draw):
     ax = fig.add_subplot(1, 1, 1)
     # print(data_arrays)
     for j in data_arrays:
+        # plot only 1/1000 part of all points because of matplotlib limit to draw too much points
         x1 = np.zeros(int(N / 1000))
         y1 = np.zeros(int(N / 1000))
 
@@ -115,6 +124,7 @@ def draw_2d(to_draw):
         for i in range(0, int(N / 1000)):
             y1[i] = j[1][i * 1000]
 
+        # find limits to make best graph position in the end
         xmax = max(x1)
         ymax = max(y1)
         maxm = max([xmax, ymax])
@@ -132,11 +142,14 @@ def draw_2d(to_draw):
         y_lim1.append(minm - deltay)
         y_lim2.append(maxm - deltay)
 
+        # plot points
         ax.plot(x1, y1)
 
+    # positions
     ax.set_xlim(min(x_lim1), max(x_lim2))
     ax.set_ylim(min(y_lim1), max(y_lim2))
 
+    # some settings
     ax.scatter(0, 0, color='red')
     ax.grid(True)
     ax.set_xlabel('x')
@@ -144,7 +157,7 @@ def draw_2d(to_draw):
     plt.show()
 
 
-# 3D graph
+# 3D graph - (analog to 2D)
 def draw_3d(to_draw):
     data_arrays = np.array(to_draw)
     x_lim1 = []
